@@ -1,0 +1,117 @@
+syntax = "proto3";
+
+package raft;
+option go_package ="./;raft";
+
+service RaftServer {
+	rpc ClusterStatusHandler (ClusterStatusRequest) returns (ClusterStatusResponse) {}
+	rpc ClusterJoinHandler (ClusterJoinRequest) returns (ClusterJoinResponse) {}
+	rpc ClusterLeaveHandler (ClusterLeaveRequest) returns (ClusterLeaveResponse) {}
+	rpc AppendEntriesRequestHandler (AppendEntriesRequest) returns (AppendEntriesResponse) {}
+	rpc VoteRequestHandler(RequestVoteRequest) returns (RequestVoteResponse) {}
+	rpc NewVoteHandler(NewVoteRequest) returns (NewVoteResponse) {}
+	rpc SnapshotRequestHandler(SnapshotRequest) returns (SnapshotResponse) {}
+	rpc SnapshotRecoveryRequestHandler(SnapshotRecoveryRequest) returns (SnapshotRecoveryResponse) {}
+}
+message ClusterStatusRequest {
+}
+
+message ClusterStatusResponse {
+	bool isLeader = 1;
+	string leader = 2;
+	repeated string	Peers = 3;
+}
+
+message ClusterJoinRequest {
+	string name = 1;
+	string connectionString = 2;
+}
+
+message ClusterJoinResponse {
+	string errMsg = 1;
+}
+
+message ClusterLeaveRequest {
+	string name = 1;
+}
+
+message ClusterLeaveResponse {
+	string errMsg = 1;
+}
+
+
+message LogEntry {
+	uint64 Index=1;
+	uint64 Term=2;
+	string CommandName=3;
+	bytes Command=4; // for nop-command
+}
+
+message AppendEntriesRequest {
+	uint64 Term=1;
+	uint64 PrevLogIndex=2;
+	uint64 PrevLogTerm=3;
+	uint64 CommitIndex=4;
+	string LeaderName=5;
+	repeated LogEntry Entries=6;
+}
+message AppendEntriesResponse {
+	uint64 Term=1;
+	uint64 Index=2;
+	uint64 CommitIndex=3;
+	bool   Success=4;
+}
+
+
+message RequestVoteRequest {
+	uint64 Term=1;
+	uint64 LastLogIndex=2;
+	uint64 LastLogTerm=3;
+	string CandidateName=4;
+}
+
+
+message RequestVoteResponse {
+	uint64 Term=1;
+	bool VoteGranted=2;
+}
+
+
+message NewVoteRequest {
+}
+
+message NewVoteResponse {
+	bool ok=1;
+}
+
+message Peer {
+	string Name=1;
+	string ConnectionString=2;
+}
+
+message SnapshotRecoveryRequest {
+	string  LeaderName=1;
+	uint64  LastIndex=2;
+	uint64  LastTerm=3;
+	repeated Peer  Peers=4;
+	bytes   State=5;
+}
+
+
+message SnapshotRecoveryResponse {
+	uint64 Term=1;
+	bool Success=2;
+	uint64 CommitIndex=3;
+}
+
+
+
+message SnapshotRequest {
+	string LeaderName=1;
+	uint64 LastIndex=2;
+	uint64 LastTerm=3;
+}
+
+message SnapshotResponse {
+	bool Success=1;
+}
