@@ -102,16 +102,25 @@ func NewRaftServer(peers []string, httpAddr string, dataDir string, pulseSeconds
 
 //IsLeader  i am the leader?
 func (s *RaftServer) IsLeader() bool {
+	if s == nil || s.raftServer == nil {
+		return false
+	}
 	return s.raftServer.Leader() == s.raftServer.Name()
 }
 
 //Leader  cluster leader
 func (s *RaftServer) Leader() string {
+	if s == nil || s.raftServer == nil {
+		return ""
+	}
 	return s.raftServer.Leader()
 }
 
 //Peers my partner nodes
 func (s *RaftServer) Peers() (members []string) {
+	if s == nil || s.raftServer == nil {
+		return nil
+	}
 	peers := s.raftServer.Peers()
 	for _, p := range peers {
 		members = append(members, p.Name)
@@ -121,6 +130,9 @@ func (s *RaftServer) Peers() (members []string) {
 
 //Nodes  all nodes
 func (s *RaftServer) Nodes() (members []string) {
+	if s == nil || s.raftServer == nil {
+		return nil
+	}
 	peers := s.raftServer.Peers()
 	for _, p := range peers {
 		members = append(members, p.Name)
