@@ -118,7 +118,7 @@ func (grpcClient *RaftGrpcClient) SendAppendEntriesRequest(request *raft.AppendE
 
 func (grpcClient *RaftGrpcClient) SendVoteRequest(request *raft.RequestVoteRequest) (*raft.RequestVoteResponse, error) {
 	if grpcClient.Client == null {
-		return nil, errors.New("dest grpc client null)
+		return nil, errors.New("dest grpc client null")
 	}			       
 	ctx, cancel := context.WithTimeout(context.Background(), grpcClient.RequestTimeout)
 	reply, err := grpcClient.Client.VoteRequestHandler(ctx, request)
