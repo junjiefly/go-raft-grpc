@@ -3,7 +3,7 @@ package go_raft_grpc
 import (
 	"errors"
 	"fmt"
-	"github.com/golang/glog"
+	"github.com/junjiefly/jlog"
 	"github.com/junjiefly/go-raft-grpc/raft"
 	protobuf "github.com/junjiefly/go-raft-grpc/raft/protobuf"
 	"google.golang.org/grpc"
@@ -38,7 +38,7 @@ func NewRaftServer(peers []string, httpAddr string, dataDir string, pulseSeconds
 	transporter := raft.NewGRPCTransporter(5*time.Second, peers)
 	s.raftServer, err = raft.NewServer(s.httpAddr, s.dataDir, transporter, nil, s, "")
 	if err != nil {
-		glog.V(0).Infoln(err)
+		jlog.V(0).Infoln(err)
 		return nil
 	}
 	s.raftServer.SetHeartbeatInterval(1 * time.Second)
@@ -48,35 +48,35 @@ func NewRaftServer(peers []string, httpAddr string, dataDir string, pulseSeconds
 	// Join to leader if specified.
 	if len(s.peers) > 0 {
 		if !s.raftServer.IsLogEmpty() {
-			glog.V(0).Infoln("starting existing cluster")
+			jlog.V(0).Infoln("starting existing cluster")
 		} else {
-			glog.V(0).Infoln("joining cluster with peers:", strings.Join(s.peers, ","))
+			jlog.V(0).Infoln("joining cluster with peers:", strings.Join(s.peers, ","))
 			firstJoinError := s.Join(s.peers)
 			if firstJoinError != nil {
-				glog.V(0).Infoln("no existing server found. starting as leader in the new cluster.")
+				jlog.V(0).Infoln("no existing server found. starting as leader in the new cluster.")
 				_, err := s.raftServer.Do(&raft.DefaultJoinCommand{
 					Name:             s.raftServer.Name(),
 					ConnectionString: "http://" + s.httpAddr,
 				})
 				if err != nil {
-					glog.V(0).Infoln(err)
+					jlog.V(0).Infoln(err)
 					return nil
 				}
 			}
 		}
 	} else if s.raftServer.IsLogEmpty() {
-		glog.V(0).Infoln("initializing new cluster")
+		jlog.V(0).Infoln("initializing new cluster")
 		_, err := s.raftServer.Do(&raft.DefaultJoinCommand{
 			Name:             s.raftServer.Name(),
 			ConnectionString: "http://" + s.httpAddr,
 		})
 
 		if err != nil {
-			glog.V(0).Infoln(err)
+			jlog.V(0).Infoln(err)
 			return nil
 		}
 	} else {
-		glog.V(0).Infoln("recovered from log")
+		jlog.V(0).Infoln("recovered from log")
 	}
 	s.raftServer.AddEventListener(raft.LeaderChangeEventType, func(e raft.Event) {
 		if s.raftServer.Leader() != "" {
@@ -85,16 +85,16 @@ func NewRaftServer(peers []string, httpAddr string, dataDir string, pulseSeconds
 			} else {
 				s.isLeader = false
 			}
-			glog.V(0).Infoln(s.raftServer.Leader(), "becomes leader!")
+			jlog.V(0).Infoln(s.raftServer.Leader(), "becomes leader!")
 		}
-		glog.V(0).Infoln("leader changed!", "prev:", e.PrevValue(), "now:", e.Value())
+		jlog.V(0).Infoln("leader changed!", "prev:", e.PrevValue(), "now:", e.Value())
 	})
 	if s.IsLeader() {
-		glog.V(0).Infoln("i am the leader!")
+		jlog.V(0).Infoln("i am the leader!")
 		s.isLeader = true
 	} else {
 		if s.raftServer.Leader() != "" {
-			glog.V(0).Infoln(s.raftServer.Leader(), "is the leader.")
+			jlog.V(0).Infoln(s.raftServer.Leader(), "is the leader.")
 		}
 	}
 	return s
@@ -154,9 +154,9 @@ func (s *RaftServer) Join(peers []string) error {
 			continue
 		}
 		err = s.raftServer.Transporter().SendClusterJoinRequest(s.raftServer, strings.TrimSpace(m), command)
-		glog.V(0).Infoln("try to connect to:", m)
+		jlog.V(0).Infoln("try to connect to:", m)
 		if err != nil {
-			glog.V(0).Infoln("connect to peer:", m, "err:", err.Error())
+			jlog.V(0).Infoln("connect to peer:", m, "err:", err.Error())
 			if _, ok := err.(*url.Error); ok {
 				continue
 			}
@@ -175,7 +175,7 @@ func (s *RaftServer) DeathNotify() {
 	for _, v := range members {
 		reply, err := s.raftServer.Transporter().SendNewVoteRequest(s.raftServer, v, nil)
 		if err != nil {
-			glog.V(0).Infoln("send new vote request to:", v, "err:", err)
+			jlog.V(0).Infoln("send new vote request to:", v, "err:", err)
 		} else if reply.Ok == true {
 			break
 		}
@@ -198,7 +198,7 @@ func StartRaftServer(ip, peerIps, port, dataDir string) *RaftServer {
 	raftAddr := fmt.Sprintf("%s:%s", ip, port)
 	raftServer := NewRaftServer(peers, raftAddr, dataDir, 3)
 	if raftServer == nil {
-		glog.Fatalln("fail to create raft server:", raftAddr)
+		jlog.Fatalln("fail to create raft server:", raftAddr)
 	}
 	return raftServer
 }

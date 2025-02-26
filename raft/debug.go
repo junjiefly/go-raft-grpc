@@ -22,12 +22,8 @@ const (
 var logLevel int = 0
 var logger *log.Logger
 
-//func init() {
-//	logger = log.New(os.Stdout, "[raft]", log.Lmicroseconds)
-//}
 
 func init() {
-	//hujf
 	logFile, err := os.Create(os.TempDir() + "/raft-" + time.Now().Local().Format("20060102-150405") + ".log")
 	writers := []io.Writer{
 		logFile,

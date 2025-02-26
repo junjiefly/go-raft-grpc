@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/golang/glog"
+	"github.com/junjiefly/jlog"
 	"github.com/junjiefly/go-raft-grpc/raft/client"
 	protobuf "github.com/junjiefly/go-raft-grpc/raft/protobuf"
 	"google.golang.org/grpc"
@@ -1564,7 +1564,7 @@ func (s *server) ClusterJoinHandler(ctx cctx.Context, req *protobuf.ClusterJoinR
 				ret.ErrMsg = err.Error()
 			}
 		default:
-			glog.V(0).Infoln("Error processing join:", err)
+			jlog.V(0).Infoln("Error processing join:", err)
 			ret.ErrMsg = err.Error()
 		}
 	}
@@ -1585,7 +1585,7 @@ func (s *server) ClusterLeaveHandler(ctx cctx.Context, req *protobuf.ClusterLeav
 				ret.ErrMsg = err.Error()
 			}
 		default:
-			glog.V(0).Infoln("Error processing join:", err)
+			jlog.V(0).Infoln("Error processing join:", err)
 			ret.ErrMsg = err.Error()
 		}
 	}

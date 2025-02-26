@@ -2,7 +2,7 @@ package raft
 
 import (
 	"errors"
-	"github.com/golang/glog"
+	"github.com/junjiefly/jlog"
 	"github.com/junjiefly/go-raft-grpc/raft/client"
 	protobuf "github.com/junjiefly/go-raft-grpc/raft/protobuf"
 	"sync"
@@ -29,7 +29,7 @@ func NewGRPCTransporter(timeout time.Duration, peers []string) *GRPCTransporter 
 		var err error
 		t.grpcClient[v], err = client.NewRaftGrpcClient(v, "0.0.0.0", timeout)
 		if err != nil {
-			glog.Fatalln("create grpc client for:", v, "err:", err)
+			jlog.Fatalln("create grpc client for:", v, "err:", err)
 		}
 	}
 	return t
