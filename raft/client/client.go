@@ -77,7 +77,7 @@ func (grpcClient *RaftGrpcClient) Close() {
 }
 
 func (grpcClient *RaftGrpcClient) SendClusterJoinRequest(request *raft.ClusterJoinRequest) (*raft.ClusterJoinResponse, error) {
-	if grpcClient.Client == nil {
+	if grpcClient == nil || grpcClient.Client == nil {
 		return nil, errors.New("dest grpc client null")
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), grpcClient.RequestTimeout)
@@ -90,7 +90,7 @@ func (grpcClient *RaftGrpcClient) SendClusterJoinRequest(request *raft.ClusterJo
 }
 
 func (grpcClient *RaftGrpcClient) SendClusterLeaveRequest(request *raft.ClusterLeaveRequest) (*raft.ClusterLeaveResponse, error) {
-	if grpcClient.Client == nil {
+	if grpcClient == nil || grpcClient.Client == nil {
 		return nil, errors.New("dest grpc client null")
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), grpcClient.RequestTimeout)
@@ -103,7 +103,7 @@ func (grpcClient *RaftGrpcClient) SendClusterLeaveRequest(request *raft.ClusterL
 }
 
 func (grpcClient *RaftGrpcClient) SendClusterStatusRequest(request *raft.ClusterStatusRequest) (*raft.ClusterStatusResponse, error) {
-	if grpcClient.Client == nil {
+	if grpcClient == nil || grpcClient.Client == nil {
 		return nil, errors.New("dest grpc client null")
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), grpcClient.RequestTimeout)
@@ -116,7 +116,7 @@ func (grpcClient *RaftGrpcClient) SendClusterStatusRequest(request *raft.Cluster
 }
 
 func (grpcClient *RaftGrpcClient) SendAppendEntriesRequest(request *raft.AppendEntriesRequest) (*raft.AppendEntriesResponse, error) {
-	if grpcClient.Client == nil {
+	if grpcClient == nil || grpcClient.Client == nil {
 		return nil, errors.New("dest grpc client null")
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), grpcClient.RequestTimeout)
@@ -129,7 +129,7 @@ func (grpcClient *RaftGrpcClient) SendAppendEntriesRequest(request *raft.AppendE
 }
 
 func (grpcClient *RaftGrpcClient) SendVoteRequest(request *raft.RequestVoteRequest) (*raft.RequestVoteResponse, error) {
-	if grpcClient.Client == nil {
+	if grpcClient == nil || grpcClient.Client == nil {
 		return nil, errors.New("dest grpc client null")
 	}			       
 	ctx, cancel := context.WithTimeout(context.Background(), grpcClient.RequestTimeout)
@@ -142,7 +142,7 @@ func (grpcClient *RaftGrpcClient) SendVoteRequest(request *raft.RequestVoteReque
 }
 
 func (grpcClient *RaftGrpcClient) SendNewVoteRequest(request *raft.NewVoteRequest) (*raft.NewVoteResponse, error) {
-	if grpcClient.Client == nil {
+	if grpcClient == nil || grpcClient.Client == nil {
 		return nil, errors.New("dest grpc client null")
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), grpcClient.RequestTimeout)
@@ -155,7 +155,7 @@ func (grpcClient *RaftGrpcClient) SendNewVoteRequest(request *raft.NewVoteReques
 }
 
 func (grpcClient *RaftGrpcClient) SendSnapshotRequest(request *raft.SnapshotRequest) (*raft.SnapshotResponse, error) {
-	if grpcClient.Client == nil {
+	if grpcClient == nil || grpcClient.Client == nil {
 		return nil, errors.New("dest grpc client null")
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), grpcClient.RequestTimeout)
@@ -168,7 +168,7 @@ func (grpcClient *RaftGrpcClient) SendSnapshotRequest(request *raft.SnapshotRequ
 }
 
 func (grpcClient *RaftGrpcClient) SendSnapshotRecoveryRequest(request *raft.SnapshotRecoveryRequest) (*raft.SnapshotRecoveryResponse, error) {
-	if grpcClient.Client == nil {
+	if grpcClient == nil || grpcClient.Client == nil {
 		return nil, errors.New("dest grpc client null")
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), grpcClient.RequestTimeout)
